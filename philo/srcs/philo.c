@@ -86,6 +86,7 @@ int	philo_init(t_data *data)
 		{
 			write(2, "Error init thread\n", 18);
 			data->loop = false;
+			data->philos[i]->thread = 0;
 			return (philo_wait_thread(data), 1);
 		}
 		if (i == 0)
@@ -93,7 +94,7 @@ int	philo_init(t_data *data)
 		else
 			data->philos[i]->left = &data->forks[i - 1];
 		i++;
-	}	
+	}
 	return (0);
 }
 
@@ -106,7 +107,8 @@ int	philo_wait_thread(t_data *data)
 	i = 0;
 	while (data->philos[i] && i < data->philo_max)
 	{
-		pthread_join(data->philos[i]->thread, NULL);
+		if (data->philos[i]->thread)
+			pthread_join(data->philos[i]->thread, NULL);
 		i++;
 	}
 	return (0);
